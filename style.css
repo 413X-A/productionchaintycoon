@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #1c1f26;
+  color: white;
+}
+
+#game {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+header {
+  padding: 10px;
+  background: #111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Insel Bar */
+#islandBar {
+  background: #222;
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Map */
+#map {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 20px;
+  transform: skewY(-8deg);
+}
+
+/* Tiles */
+.tile {
+  background: #2f7d32;
+  height: 90px;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 8px 0 #1b4d1e;
+  cursor: pointer;
+}
+
+/* Gebäude */
+.building {
+  position: absolute;
+  inset: 10px;
+  background: #ccc;
+  border-radius: 6px;
+  transform: skewY(8deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-size: 11px;
+  text-align: center;
+  padding: 4px;
+}
+
+/* Info Box */
+#infoBox {
+  background: #111;
+  padding: 6px 10px;
+  font-size: 12px;
+  min-height: 40px;
+}
+
+/* Bottom Menü */
+nav {
+  display: flex;
+  background: #111;
+}
+
+nav button {
+  flex: 1;
+  padding: 14px;
+  background: #222;
+  color: white;
+  border: none;
+  font-size: 14px;
+}
