@@ -15,6 +15,7 @@
     <div class="topStats">
       <span id="money">💰 0</span>
       <span id="gems">💎 0</span>
+      <span id="prestige">🔁 x1</span>
     </div>
   </header>
 
@@ -28,7 +29,7 @@
     <svg id="map"></svg>
   </div>
 
-  <!-- Overlays -->
+  <!-- BUILD / UPGRADE OVERLAYS -->
   <div id="overlay" class="overlay hidden">
     <div class="box">
       <h3>Platzieren</h3>
@@ -37,6 +38,15 @@
     </div>
   </div>
 
+  <div id="upgradeOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>Upgrades</h3>
+      <div id="upgradeOptions"></div>
+      <button id="closeUpgrade">Schließen</button>
+    </div>
+  </div>
+
+  <!-- QUESTS -->
   <div id="questOverlay" class="overlay hidden">
     <div class="box large">
       <h3>📝 Quests</h3>
@@ -45,6 +55,7 @@
     </div>
   </div>
 
+  <!-- SKILL TREE -->
   <div id="skillOverlay" class="overlay hidden">
     <div class="box large">
       <h3>🧠 Skill Tree</h3>
@@ -53,6 +64,7 @@
     </div>
   </div>
 
+  <!-- DAILY REWARD -->
   <div id="dailyOverlay" class="overlay hidden">
     <div class="box">
       <h3>🎁 Tägliche Belohnung</h3>
@@ -62,6 +74,7 @@
     </div>
   </div>
 
+  <!-- TUTORIAL -->
   <div id="tutorialOverlay" class="overlay hidden">
     <div class="box">
       <h3>📘 Tutorial</h3>
@@ -70,10 +83,47 @@
     </div>
   </div>
 
+  <!-- WELTKARTE -->
+  <div id="worldOverlay" class="overlay hidden">
+    <div class="box large">
+      <h3>🗺 Weltkarte</h3>
+      <div id="worldMap">
+        <div id="worldInner"></div>
+      </div>
+      <div class="worldControls">
+        <button id="zoomOut">➖</button>
+        <button id="zoomIn">➕</button>
+      </div>
+      <button id="closeWorld">Schließen</button>
+    </div>
+  </div>
+
+  <!-- MANAGER -->
+  <div id="managerOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>🤖 Manager</h3>
+      <div id="managerList"></div>
+      <button id="closeManagers">Schließen</button>
+    </div>
+  </div>
+
+  <!-- SHOP -->
+  <div id="shopOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>💎 Shop</h3>
+      <button id="buyGemsSmall">+50 💎 (Demo)</button>
+      <button id="closeShop">Schließen</button>
+    </div>
+  </div>
+
   <nav>
     <button id="questBtn">📝 Quests</button>
     <button id="skillBtn">🧠 Skill Tree</button>
     <button id="dailyBtn">🎁 Tägliche Belohnungen</button>
+    <button id="managerBtn">🤖 Manager</button>
+    <button id="worldBtn">🗺 Welt</button>
+    <button id="shopBtn">💎 Shop</button>
+    <button id="prestigeBtn">🔁 Prestige</button>
     <button id="newGameBtn">🔄 Neues Spiel</button>
   </nav>
 
