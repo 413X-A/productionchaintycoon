@@ -1,7 +1,4 @@
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
 
 body {
   margin: 0;
@@ -17,8 +14,8 @@ body {
 
 /* Header */
 header {
-  padding: 10px;
   background: #111;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,57 +34,84 @@ header {
 #map {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  padding: 20px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 16px;
   transform: skewY(-8deg);
 }
 
-/* Tiles */
 .tile {
   background: #2f7d32;
-  height: 90px;
-  border-radius: 8px;
+  height: 70px;
+  border-radius: 6px;
   position: relative;
-  box-shadow: 0 8px 0 #1b4d1e;
+  box-shadow: 0 6px 0 #1b4d1e;
   cursor: pointer;
 }
 
-/* Gebäude */
-.building {
+.tile .content {
   position: absolute;
-  inset: 10px;
-  background: #ccc;
-  border-radius: 6px;
+  inset: 8px;
+  border-radius: 4px;
   transform: skewY(8deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
+  color: #000;
   font-size: 11px;
   text-align: center;
-  padding: 4px;
+  white-space: pre-line;
 }
 
-/* Info Box */
-#infoBox {
-  background: #111;
-  padding: 6px 10px;
-  font-size: 12px;
-  min-height: 40px;
-}
+/* Typen */
+.building { background: #ddd; }
+.road { background: #555; color: #fff; }
+.storage { background: #f0c36d; }
+.harbor { background: #6db7f0; }
 
-/* Bottom Menü */
-nav {
+/* Overlays */
+#overlay, #upgradeOverlay, #prestigeOverlay, #achievementOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
   display: flex;
-  background: #111;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.hidden { display: none; }
+
+#overlayBox {
+  background: #222;
+  padding: 16px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 340px;
 }
 
+#buildOptions button,
+#upgradeOptions button,
+#overlayBox button {
+  width: 100%;
+  margin: 6px 0;
+  padding: 10px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+/* Nav */
+nav {
+  background: #111;
+  padding: 8px;
+  display: flex;
+  gap: 6px;
+}
 nav button {
   flex: 1;
-  padding: 14px;
+  padding: 12px;
   background: #222;
   color: white;
   border: none;
-  font-size: 14px;
 }
