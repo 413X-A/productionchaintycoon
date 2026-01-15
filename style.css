@@ -1,41 +1,9 @@
-*{box-sizing:border-box;font-family:Arial;margin:0;padding:0}
-body{background:#1c1f26;color:#fff}
-#game{display:flex;flex-direction:column;height:100vh}
-
-header{background:#111;padding:10px;display:flex;justify-content:space-between;align-items:center}
-.topStats span{margin-left:10px}
-
-#islandBar{background:#222;padding:6px 10px;display:flex;justify-content:space-between}
-
-#mapContainer{flex:1;padding:16px;overflow:auto;background:#0e1220;}
-#map{width:100%;height:100%;}
-
-.tile{cursor:pointer;stroke:#222;stroke-width:2;}
-.tile.land{fill:#2f7d32;}
-.tile.water{fill:#1b3d6b;}
-.tile.building{fill:#f0c36d;}
-
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:10}
-.hidden{display:none}
-.box{background:#222;padding:16px;border-radius:8px;width:90%;max-width:360px}
-.box.large{max-width:480px}
-.box button{width:100%;margin:6px 0;padding:10px;background:#333;color:#fff;border:0;border-radius:6px}
-
-nav{background:#111;padding:8px;display:flex;gap:6px}
-nav button{flex:1;padding:10px;background:#222;color:#fff;border:0}
-
-#skillTree button,#questList div,#managerList button{margin:6px 0;padding:6px;background:#333;border-radius:6px;color:#fff;}
-
-#worldMap{height:240px;background:#0b0f1a;border-radius:8px;overflow:hidden;position:relative}
-#worldInner{position:absolute;left:0;top:0;transform-origin:0 0}
-.islandIcon{
-  width:48px;height:48px;border-radius:50%;
-  background:#2f7d32;display:flex;align-items:center;justify-content:center;
-  position:absolute;color:#fff;cursor:pointer;font-size:11px;
-}
-.islandLocked{background:#555}
-.ship{
-  position:absolute;width:18px;height:18px;border-radius:50%;
-  background:#fff;pointer-events:none;
-}
-.worldControls{display:flex;gap:6px;margin:6px 0}
+body {margin:0; font-family:sans-serif; background:#a0d6f0; color:#000;}
+header, footer {display:flex; justify-content:space-around; padding:5px; background:#222; color:#fff;}
+#map {background:#7ec0ee; border:2px solid #000;}
+.tile.land {fill:#7cfc00;}
+.tile.water {fill:#1e90ff;}
+button {margin:2px; padding:5px; font-size:14px;}
+.hidden {display:none;}
+.resourcePop {position:absolute; font-weight:bold; color:#fff; pointer-events:none;}
+.ship {position:absolute; width:20px; height:20px; background:red; border-radius:50%;}
