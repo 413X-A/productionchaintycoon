@@ -16,7 +16,7 @@
 </header>
 
 <main>
-  <svg id="map" width="100%" height="400"></svg>
+  <svg id="map" width="100%" height="500"></svg>
 
   <div id="islandUI">
     <div id="resourceUI"></div>
@@ -35,27 +35,27 @@
 
 <!-- Overlays -->
 <div id="overlay" class="hidden">
-  <div id="buildOptions"></div>
-  <button id="closeOverlay">Schließen</button>
+  <div id="buildOptions" class="overlayBox"></div>
+  <button id="closeOverlay" class="overlayClose">✖ Schließen</button>
 </div>
 
-<div id="questOverlay" class="hidden">
+<div id="questOverlay" class="hidden overlayBox">
   <div id="questList"></div>
-  <button id="closeQuest">Schließen</button>
+  <button id="closeQuest" class="overlayClose">✖ Schließen</button>
 </div>
 
-<div id="skillOverlay" class="hidden">
+<div id="skillOverlay" class="hidden overlayBox">
   <div id="skillTree"></div>
-  <button id="closeSkills">Schließen</button>
+  <button id="closeSkills" class="overlayClose">✖ Schließen</button>
 </div>
 
-<div id="dailyOverlay" class="hidden">
+<div id="dailyOverlay" class="hidden overlayBox">
   <div id="dailyText"></div>
   <button id="claimDaily">Abholen</button>
-  <button id="closeDaily">Schließen</button>
+  <button id="closeDaily" class="overlayClose">✖ Schließen</button>
 </div>
 
-<div id="tutorialOverlay" class="hidden">
+<div id="tutorialOverlay" class="hidden overlayBox">
   <div id="tutorialText"></div>
   <button id="tutorialNext">Weiter</button>
 </div>
