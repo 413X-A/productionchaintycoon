@@ -524,7 +524,7 @@ function animateResource(x,y,resource,amount){
   const anim = document.createElement("div");
   anim.textContent = `+${Math.floor(amount)} ${resource}`;
   anim.className = "resourcePop";
-  anim.style.left = (x*size)+"px";
+  anim.style.left = (x*size+10)+"px";  // leicht verschoben für Gebäude
   anim.style.top = (y*size-20)+"px";
   document.body.appendChild(anim);
   setTimeout(()=>anim.remove(),1000);
@@ -538,11 +538,14 @@ function animateShip(x,y){
   ship.style.left = (x*size)+"px";
   ship.style.top = (y*size)+"px";
   document.body.appendChild(ship);
-  let pos=0;
-  const id=setInterval(()=>{
+  let pos = 0;
+  const id = setInterval(()=>{
     pos+=5;
-    ship.style.left = (x*size+pos)+"px";
-    if(pos>300){clearInterval(id); ship.remove();}
+    ship.style.left = (x*size + pos) + "px";
+    if(pos>window.innerWidth){
+      clearInterval(id);
+      ship.remove();
+    }
   },30);
 }
 
