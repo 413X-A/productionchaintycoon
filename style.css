@@ -115,3 +115,20 @@ nav button {
   color: white;
   border: none;
 }
+
+/* bleibt wie vorher, nur Ergänzungen */
+
+#worldList button {
+  width: 100%;
+  margin: 6px 0;
+  padding: 10px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+#aiOverlay label {
+  display: block;
+  margin-bottom: 12px;
+}
