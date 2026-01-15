@@ -1,134 +1,57 @@
-* { box-sizing: border-box; font-family: Arial, sans-serif; }
+*{box-sizing:border-box;font-family:Arial}
+body{margin:0;background:#1c1f26;color:#fff}
+#game{display:flex;flex-direction:column;height:100vh}
 
-body {
-  margin: 0;
-  background: #1c1f26;
-  color: white;
+header{background:#111;padding:10px;display:flex;justify-content:space-between}
+.topStats span{margin-left:10px}
+
+#islandBar{background:#222;padding:6px 10px;display:flex;justify-content:space-between}
+
+#map{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  padding:16px;
+  transform:skewY(-8deg);
 }
-
-#game {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+.tile{
+  background:#2f7d32;height:70px;border-radius:6px;
+  box-shadow:0 6px 0 #1b4d1e;cursor:pointer;position:relative;
 }
-
-/* Header */
-header {
-  background: #111;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.content{
+  position:absolute;inset:8px;border-radius:4px;
+  transform:skewY(8deg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#000;text-align:center;white-space:pre-line;
 }
+.road{background:#555;color:#fff}
+.building{background:#ddd}
+.storage{background:#f0c36d}
+.harbor{background:#6db7f0}
 
-/* Insel Bar */
-#islandBar {
-  background: #222;
-  padding: 6px 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);
+display:flex;align-items:center;justify-content:center;z-index:10}
+.hidden{display:none}
+
+.box{background:#222;padding:16px;border-radius:8px;width:90%;max-width:340px}
+.box.large{max-width:420px}
+
+.box button{width:100%;margin:6px 0;padding:10px;background:#333;color:#fff;border:0;border-radius:6px}
+
+nav{background:#111;padding:8px;display:flex;gap:6px}
+nav button{flex:1;padding:10px;background:#222;color:#fff;border:0}
+
+#worldMap{height:240px;background:#0e1220;border-radius:8px;overflow:hidden;position:relative}
+#worldInner{position:absolute;left:0;top:0;transform-origin:0 0}
+.islandIcon{
+  width:48px;height:48px;border-radius:50%;
+  background:#2f7d32;display:flex;align-items:center;justify-content:center;
+  position:absolute;color:#fff;cursor:pointer;font-size:11px;
 }
-
-/* Map */
-#map {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  padding: 16px;
-  transform: skewY(-8deg);
+.islandLocked{background:#555}
+.ship{
+  position:absolute;width:18px;height:18px;border-radius:50%;
+  background:#fff;pointer-events:none;
 }
-
-.tile {
-  background: #2f7d32;
-  height: 70px;
-  border-radius: 6px;
-  position: relative;
-  box-shadow: 0 6px 0 #1b4d1e;
-  cursor: pointer;
-}
-
-.tile .content {
-  position: absolute;
-  inset: 8px;
-  border-radius: 4px;
-  transform: skewY(8deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  font-size: 11px;
-  text-align: center;
-  white-space: pre-line;
-}
-
-/* Typen */
-.building { background: #ddd; }
-.road { background: #555; color: #fff; }
-.storage { background: #f0c36d; }
-.harbor { background: #6db7f0; }
-
-/* Overlays */
-#overlay, #upgradeOverlay, #prestigeOverlay, #achievementOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-.hidden { display: none; }
-
-#overlayBox {
-  background: #222;
-  padding: 16px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 340px;
-}
-
-#buildOptions button,
-#upgradeOptions button,
-#overlayBox button {
-  width: 100%;
-  margin: 6px 0;
-  padding: 10px;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 6px;
-}
-
-/* Nav */
-nav {
-  background: #111;
-  padding: 8px;
-  display: flex;
-  gap: 6px;
-}
-nav button {
-  flex: 1;
-  padding: 12px;
-  background: #222;
-  color: white;
-  border: none;
-}
-
-/* bleibt wie vorher, nur Ergänzungen */
-
-#worldList button {
-  width: 100%;
-  margin: 6px 0;
-  padding: 10px;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 6px;
-}
-
-#aiOverlay label {
-  display: block;
-  margin-bottom: 12px;
-}
+.worldControls{display:flex;gap:6px;margin:6px 0}
