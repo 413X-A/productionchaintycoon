@@ -71,7 +71,7 @@ function createIslandTiles(){
   }));
 }
 
-function initGame(){
+function initIslands(){
   game.islands = ISLANDS.map(i=>({...i,tiles:createIslandTiles(),resources:{}}));
   game.islands.forEach(is=>{
     RESOURCES.forEach(r=>is.resources[r]=0);
@@ -80,15 +80,20 @@ function initGame(){
     is.tiles[cy][cx].building = {...BUILDINGS.storage,level:1};
   });
 }
-initGame();
+
+// ================= SAVE / LOAD =================
+function saveGame(){localStorage.setItem("pct_save",JSON.stringify(game));}
+function loadGame(){const s=localStorage.getItem("pct_save"); if(s){game=JSON.parse(s);}}
+loadGame();
 
 // ================= MAP =================
 const mapEl = document.getElementById("map");
+let selectedTile = null;
+
 function renderMap(){
   mapEl.innerHTML="";
   const island = game.islands[game.islandIndex];
   const size = 40;
-
   island.tiles.forEach((row,y)=>{
     row.forEach((cell,x)=>{
       const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
@@ -114,7 +119,7 @@ function renderMap(){
     });
   });
 
-  // Ressourcen UI
+  // Ressourcen UI oben
   const resUI = document.getElementById("resourceUI");
   resUI.innerHTML="";
   const res = game.islands[game.islandIndex].resources;
@@ -131,7 +136,7 @@ function renderMap(){
 // ================= BUILD / DEMOLISH =================
 const overlay = document.getElementById("overlay");
 const buildOptions = document.getElementById("buildOptions");
-let selectedTile = null;
+document.getElementById("closeOverlay").onclick = ()=>overlay.classList.add("hidden");
 
 function openBuildOverlay(x,y){
   selectedTile={x,y};
@@ -181,7 +186,6 @@ function openBuildOverlay(x,y){
   }
   overlay.classList.remove("hidden");
 }
-document.getElementById("closeOverlay").onclick = ()=>overlay.classList.add("hidden");
 
 // ================= QUESTS =================
 function checkQuests(){
@@ -194,9 +198,7 @@ function checkQuests(){
       island.tiles.flat().forEach(t=>{if(t.building&&t.building.name===q.building) cnt++;});
       q.progress=cnt;
     }
-    if(q.type==="trade"){
-      // Händler-System kann hier Ressourcen abziehen
-    }
+    if(q.type==="trade"){} // Verkauf wird über Händler aktualisiert
     if(q.progress>=q.amount){
       q.completed=true;
       game.money += q.reward.money;
@@ -205,151 +207,10 @@ function checkQuests(){
   });
 }
 
-// ================= TUTORIAL =================
-const tutorialOverlay = document.getElementById("tutorialOverlay");
-const tutorialText = document.getElementById("tutorialText");
-const tutorialNext = document.getElementById("tutorialNext");
-
-const tutorialSteps = [
-  "Willkommen zu Production Chain Tycoon! Lass uns starten.",
-  "Zuerst baue eine Straße neben deinem Lager.",
-  "Jetzt baue ein Lager, um Ressourcen zu speichern.",
-  "Platziere einen Holzfäller auf der Insel, um Holz zu produzieren.",
-  "Super! Produktion startet, sobald Gebäude mit Lager verbunden sind.",
-  "Tutorial abgeschlossen! Viel Spaß!"
-];
-
-function startTutorial(){
-  game.tutorialStep = 0;
-  showTutorialStep();
-}
-
-function showTutorialStep(){
-  tutorialText.textContent = tutorialSteps[game.tutorialStep];
-  tutorialOverlay.classList.remove("hidden");
-}
-
-tutorialNext.onclick = ()=>{
-  game.tutorialStep++;
-  if(game.tutorialStep >= tutorialSteps.length){
-    tutorialOverlay.classList.add("hidden");
-  } else showTutorialStep();
-}
-
-// ================= GAME LOOP =================
-function tick(){
-  const now = Date.now();
-  const delta = (now - game.lastTime)/1000;
-  game.lastTime = now;
-
-  game.islands.forEach(is=>{
-    let totalStorage = 0;
-    let connected = false;
-    is.tiles.flat().forEach(t=>{
-      if(t.building && t.building.type==="storage") totalStorage += t.building.capacity;
-    });
-
-    // Prüfen Verbindung Lager -> Straße
-    const queue = [];
-    is.tiles.flat().forEach((t,idx)=>{
-      if(t.building && t.building.type==="storage") queue.push({x: idx%GRID_COLS, y: Math.floor(idx/GRID_COLS)});
-    });
-    if(queue.length>0) connected = true;
-
-    // Produktion
-    is.tiles.flat().forEach(t=>{
-      if(!t.building) return;
-      if(t.building.type==="producer" || t.building.type==="processor"){
-        if(!connected) return;
-        Object.keys(t.building.produces||{}).forEach(r=>{
-          const amt = t.building.produces[r]*t.building.level*game.prestige.multiplier;
-          if((is.resources[r]||0)+amt > totalStorage) return;
-          is.resources[r] = (is.resources[r]||0)+amt;
-          animateResource(t,r,amt);
-        });
-      }
-      if(t.building.type==="harbor"){
-        Object.keys(is.resources).forEach(r=>{
-          if(r==="plank"){
-            const amt = Math.min(t.building.exportRate*t.building.level,is.resources[r]);
-            is.resources[r]-=amt;
-            game.money += amt*5*game.prestige.multiplier;
-            animateShip(t);
-          }
-        });
-      }
-    });
-  });
-
-  checkQuests();
-  updateUI();
-  saveGame();
-}
-setInterval(tick,TICK_INTERVAL);
-
-// ================= UI =================
-function updateUI(){
-  document.getElementById("money").textContent="💰 "+Math.floor(game.money);
-  document.getElementById("gems").textContent="💎 "+game.gems;
-  document.getElementById("prestige").textContent="🔁 x"+game.prestige.multiplier.toFixed(1);
-  document.getElementById("islandName").textContent="🏝 "+game.islands[game.islandIndex].name;
-  renderMap();
-}
-
-// ================= ANIMATION =================
-function animateResource(tile,resource,amount){
-  const size=40;
-  const x=(selectedTile?.x||0)*size;
-  const y=(selectedTile?.y||0)*size;
-  const anim=document.createElement("div");
-  anim.textContent=`+${Math.floor(amount)} ${resource}`;
-  anim.className="resourcePop";
-  anim.style.left = x+"px";
-  anim.style.top = y-20+"px";
-  document.body.appendChild(anim);
-  setTimeout(()=>anim.remove(),1000);
-}
-function animateShip(tile){
-  const ship=document.createElement("div");
-  ship.className="ship";
-  ship.style.left="0px";
-  ship.style.top="0px";
-  document.body.appendChild(ship);
-  let pos=0;
-  const id=setInterval(()=>{
-    pos+=5;
-    ship.style.left = pos+"px";
-    if(pos>300){clearInterval(id); ship.remove();}
-  },30);
-}
-
-// ================= SAVE / LOAD =================
-function saveGame(){localStorage.setItem("pct_save",JSON.stringify(game));}
-function loadGame(){const s=localStorage.getItem("pct_save"); if(s){game=JSON.parse(s);}}
-loadGame();
-
-// ================= POP-UP =================
-function showPopUp(msg){
-  const div=document.createElement("div");
-  div.textContent = msg;
-  div.style.position="fixed";
-  div.style.top="10%";
-  div.style.left="50%";
-  div.style.transform="translateX(-50%)";
-  div.style.padding="10px 20px";
-  div.style.background="#222";
-  div.style.border="2px solid #fff";
-  div.style.borderRadius="8px";
-  div.style.zIndex=50;
-  document.body.appendChild(div);
-  setTimeout(()=>div.remove(),2000);
-}
-
 // ================= SKILL-TREE =================
 const skillOverlay = document.getElementById("skillOverlay");
 const skillTreeDiv = document.getElementById("skillTree");
 
-// Skill-Tree öffnen
 document.getElementById("skillBtn").onclick = ()=>{
   renderSkillTree();
   skillOverlay.classList.remove("hidden");
@@ -357,7 +218,6 @@ document.getElementById("skillBtn").onclick = ()=>{
 
 document.getElementById("closeSkills").onclick = ()=>skillOverlay.classList.add("hidden");
 
-// Rendern der Skills
 function renderSkillTree(){
   skillTreeDiv.innerHTML = "";
   game.skills.forEach(skill=>{
@@ -389,15 +249,9 @@ function renderSkillTree(){
   });
 }
 
-// Effekt der Skills
 function applySkillEffects(skillId){
   if(skillId==="prodBoost"){
-    // jede Stufe +10% Produktion
     game.prestige.multiplier = 1 + (game.skills.find(s=>s.id==="prodBoost").level*0.1);
-  }
-  if(skillId==="storageBoost"){
-    // jede Stufe +50 Lagerkapazität (bereits addiert in Tick-Funktion)
-    // Lagerkapazität wird automatisch im Tick geprüft
   }
 }
 
@@ -409,7 +263,6 @@ const traders = [
   {id:3,name:"Eis-Händler",wants:"ice",price:6}
 ];
 
-// Händler Overlay
 let traderOverlay = document.createElement("div");
 traderOverlay.className = "overlayBox hidden";
 traderOverlay.id = "traderOverlay";
@@ -419,7 +272,7 @@ function openTrader(){
   const island = game.islands[game.islandIndex];
   traderOverlay.innerHTML = "<h3>Händler</h3>";
   traders.forEach(tr=>{
-    if(!ISLANDS[game.islandIndex].resources.includes(tr.wants)) return; // nur passende Ressourcen
+    if(!ISLANDS[game.islandIndex].resources.includes(tr.wants)) return;
     const div = document.createElement("div");
     div.style.margin="5px 0";
     div.textContent = `${tr.name} kauft ${tr.wants} für ${tr.price}💰 pro Einheit. Du hast: ${island.resources[tr.wants] || 0}`;
@@ -449,7 +302,7 @@ function openTrader(){
         }
       });
       updateUI();
-      openTrader(); // Overlay aktualisieren
+      openTrader();
     };
     div.appendChild(sellBtn);
     traderOverlay.appendChild(div);
@@ -470,6 +323,239 @@ traderBtn.textContent="Händler";
 traderBtn.onclick = openTrader;
 document.querySelector("footer").appendChild(traderBtn);
 
+// ================= TUTORIAL =================
+const tutorialOverlay = document.getElementById("tutorialOverlay");
+const tutorialText = document.getElementById("tutorialText");
+const tutorialNext = document.getElementById("tutorialNext");
+
+const tutorialSteps = [
+  "Willkommen zu Production Chain Tycoon! Lass uns starten.",
+  "Zuerst baue eine Straße neben deinem Lager.",
+  "Jetzt baue ein Lager, um Ressourcen zu speichern.",
+  "Platziere einen Holzfäller auf der Insel, um Holz zu produzieren.",
+  "Super! Produktion startet, sobald Gebäude mit Lager verbunden sind.",
+  "Tutorial abgeschlossen! Viel Spaß!"
+];
+
+tutorialNext.onclick = ()=>{
+  game.tutorialStep++;
+  if(game.tutorialStep >= tutorialSteps.length){
+    tutorialOverlay.classList.add("hidden");
+    localStorage.setItem("tutorialCompleted","true");
+  } else tutorialText.textContent = tutorialSteps[game.tutorialStep];
+};
+
+// ================= TÄGLICHE BELOHNUNG =================
+const dailyOverlay = document.getElementById("dailyOverlay");
+const dailyText = document.getElementById("dailyText");
+const claimDaily = document.getElementById("claimDaily");
+const closeDaily = document.getElementById("closeDaily");
+
+document.getElementById("dailyBtn").onclick = ()=>{
+  const last = game.dailyClaim;
+  const now = new Date().getDate();
+  if(last === now){
+    dailyText.textContent = "Du hast die tägliche Belohnung bereits abgeholt!";
+    claimDaily.disabled = true;
+  } else {
+    dailyText.textContent = "Abholung möglich!";
+    claimDaily.disabled = false;
+  }
+  dailyOverlay.classList.remove("hidden");
+};
+
+claimDaily.onclick = ()=>{
+  game.money += 100;
+  game.gems += 1;
+  game.dailyClaim = new Date().getDate();
+  showPopUp("Tägliche Belohnung: +100💰 +1💎");
+  updateUI();
+  dailyOverlay.classList.add("hidden");
+};
+
+closeDaily.onclick = ()=>dailyOverlay.classList.add("hidden");
+
+// ================= PRESTIGE =================
+const prestigeBtn = document.getElementById("prestigeBtn");
+prestigeBtn.onclick = ()=>{
+  if(confirm("Prestige zurücksetzen? Du verlierst alles für einen Multiplikator.")){
+    const gained = Math.floor(game.money/1000);
+    game.prestige.points += gained;
+    game.prestige.multiplier = 1 + game.prestige.points*0.1;
+    startNewGame();
+    showPopUp(`Prestige aktiviert! Multiplikator: x${game.prestige.multiplier.toFixed(1)}`);
+  }
+};
+
+// ================= NEUES SPIEL =================
+document.getElementById("newGameBtn").onclick = ()=>{
+  if(confirm("Neues Spiel starten? Dein aktueller Fortschritt geht verloren!")){
+    startNewGame();
+  }
+};
+
+function startNewGame(){
+  game.money = START_MONEY;
+  game.gems = START_GEMS;
+  game.prestige = {points:game.prestige.points,multiplier:game.prestige.multiplier};
+  game.islandIndex = 0;
+  game.unlockedIslands = [0];
+  game.skills = SKILLS.map(s=>({...s,level:0}));
+  game.quests = QUESTS.map(q=>({...q,progress:0,completed:false}));
+  game.dailyClaim = 0;
+  game.tutorialStep = 0;
+  game.lastTime = Date.now();
+  game.offlineTime = 0;
+
+  initIslands();
+
+  if(!localStorage.getItem("tutorialCompleted")){
+    startTutorial();
+  }
+
+  updateUI();
+  saveGame();
+}
+
+// ================= GAME LOOP =================
+function tick(){
+  const now = Date.now();
+  const delta = (now - game.lastTime)/1000;
+  game.lastTime = now;
+
+  game.islands.forEach(is=>{
+    let totalStorage = 0;
+    let connected = false;
+    is.tiles.flat().forEach(t=>{    if(t.building && t.building.type==="storage") totalStorage += t.building.capacity;
+  });
+
+  // Prüfen: Verbindung Lager → Straße (einfache BFS für Nachbarschaft)
+  const visited = Array.from({length:GRID_ROWS},()=>Array(GRID_COLS).fill(false));
+  const queue = [];
+  is.tiles.flat().forEach((t,idx)=>{
+    if(t.building && t.building.type==="storage") queue.push({x:idx%GRID_COLS, y:Math.floor(idx/GRID_COLS)});
+  });
+
+  while(queue.length>0){
+    const {x,y} = queue.shift();
+    if(visited[y][x]) continue;
+    visited[y][x]=true;
+    const neighbors = [
+      {x:x+1,y:y},{x:x-1,y:y},{x:x,y:y+1},{x:x,y:y-1}
+    ];
+    neighbors.forEach(n=>{
+      if(n.x>=0 && n.x<GRID_COLS && n.y>=0 && n.y<GRID_ROWS){
+        const nb = is.tiles[n.y][n.x];
+        if((nb.building && nb.building.type==="road") && !visited[n.y][n.x]){
+          queue.push({x:n.x,y:n.y});
+        }
+      }
+    });
+  }
+
+  // Produktion
+  is.tiles.flat().forEach((t,idx)=>{
+    if(!t.building) return;
+    if(t.building.type==="producer" || t.building.type==="processor"){
+      const x = idx % GRID_COLS, y = Math.floor(idx / GRID_COLS);
+      if(!visited[y][x]) return; // Nur verbunden
+      Object.keys(t.building.produces||{}).forEach(r=>{
+        const amt = t.building.produces[r]*t.building.level*game.prestige.multiplier;
+        if((is.resources[r]||0)+amt>totalStorage) return;
+        is.resources[r] = (is.resources[r]||0)+amt;
+        animateResource(x,y,r,amt);
+      });
+    }
+
+    // Hafen: Exportieren
+    if(t.building.type==="harbor"){
+      Object.keys(is.resources).forEach(r=>{
+        if(r==="plank"){ // Beispiel: nur Plank exportieren
+          const amt = Math.min(t.building.exportRate*t.building.level,is.resources[r]);
+          if(amt>0){
+            is.resources[r]-=amt;
+            game.money += amt*5*game.prestige.multiplier;
+            animateShip(x,y);
+            // Export-Quest aktualisieren
+            game.quests.forEach(q=>{
+              if(q.completed) return;
+              if(q.type==="export" && q.resource===r){
+                q.progress+=amt;
+                if(q.progress>=q.amount){
+                  q.completed=true;
+                  game.money += q.reward.money;
+                  showPopUp(`Quest abgeschlossen: ${q.text} +${q.reward.money}💰`);
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+  checkQuests();
+  updateUI();
+  saveGame();
+}
+
+setInterval(tick,TICK_INTERVAL);
+
+// ================= POP-UP =================
+function showPopUp(msg){
+  const div=document.createElement("div");
+  div.textContent = msg;
+  div.style.position="fixed";
+  div.style.top="10%";
+  div.style.left="50%";
+  div.style.transform="translateX(-50%)";
+  div.style.padding="10px 20px";
+  div.style.background="#222";
+  div.style.border="2px solid #fff";
+  div.style.borderRadius="8px";
+  div.style.color="#fff";
+  div.style.zIndex=50;
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(),2000);
+}
+
+// ================= RESOURCE ANIMATION =================
+function animateResource(x,y,resource,amount){
+  const size = 40;
+  const anim = document.createElement("div");
+  anim.textContent = `+${Math.floor(amount)} ${resource}`;
+  anim.className = "resourcePop";
+  anim.style.left = (x*size)+"px";
+  anim.style.top = (y*size-20)+"px";
+  document.body.appendChild(anim);
+  setTimeout(()=>anim.remove(),1000);
+}
+
+// ================= SHIP ANIMATION =================
+function animateShip(x,y){
+  const size = 40;
+  const ship = document.createElement("div");
+  ship.className = "ship";
+  ship.style.left = (x*size)+"px";
+  ship.style.top = (y*size)+"px";
+  document.body.appendChild(ship);
+  let pos=0;
+  const id=setInterval(()=>{
+    pos+=5;
+    ship.style.left = (x*size+pos)+"px";
+    if(pos>300){clearInterval(id); ship.remove();}
+  },30);
+}
+
+// ================= UI UPDATE =================
+function updateUI(){
+  document.getElementById("money").textContent="💰 "+Math.floor(game.money);
+  document.getElementById("gems").textContent="💎 "+game.gems;
+  document.getElementById("prestige").textContent="🔁 x"+game.prestige.multiplier.toFixed(1);
+  document.getElementById("islandName").textContent="🏝 "+game.islands[game.islandIndex].name;
+  renderMap();
+}
+
 // ================= INIT =================
+if(!localStorage.getItem("pct_save")) initIslands();
+if(!localStorage.getItem("tutorialCompleted")) startTutorial();
 updateUI();
-startTutorial();
