@@ -12,7 +12,10 @@
 
   <header>
     <h1>🏭 Production Chain Tycoon</h1>
-    <div id="money">💰 0</div>
+    <div class="topStats">
+      <span id="money">💰 0</span>
+      <span id="gems">💎 0</span>
+    </div>
   </header>
 
   <div id="islandBar">
@@ -23,66 +26,77 @@
 
   <div id="map"></div>
 
-  <!-- Overlay Bauen -->
-  <div id="overlay" class="hidden">
-    <div id="overlayBox">
+  <!-- Overlays -->
+  <div id="overlay" class="overlay hidden">
+    <div class="box">
       <h3>Platzieren</h3>
       <div id="buildOptions"></div>
       <button id="closeOverlay">Abbrechen</button>
     </div>
   </div>
 
-  <!-- Overlay Upgrade -->
-  <div id="upgradeOverlay" class="hidden">
-    <div id="overlayBox">
+  <div id="upgradeOverlay" class="overlay hidden">
+    <div class="box">
       <h3>Upgrades</h3>
       <div id="upgradeOptions"></div>
       <button id="closeUpgrade">Schließen</button>
     </div>
   </div>
 
-  <!-- Overlay Prestige -->
-  <div id="prestigeOverlay" class="hidden">
-    <div id="overlayBox">
-      <h3>Prestige</h3>
+  <div id="achievementOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>🏆 Erfolge</h3>
+      <div id="achievementList"></div>
+      <button id="closeAchievements">Schließen</button>
+    </div>
+  </div>
+
+  <div id="prestigeOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>🔁 Prestige</h3>
       <p id="prestigeInfo"></p>
       <button id="doPrestige">Prestige starten</button>
       <button id="closePrestige">Abbrechen</button>
     </div>
   </div>
 
-  <!-- Overlay Achievements -->
-  <div id="achievementOverlay" class="hidden">
-    <div id="overlayBox">
-      <h3>Erfolge</h3>
-      <div id="achievementList"></div>
-      <button id="closeAchievements">Schließen</button>
-    </div>
-  </div>
-
-  <!-- 🌍 Weltkarte -->
-  <div id="worldOverlay" class="hidden">
-    <div id="overlayBox">
-      <h3>🌍 Weltkarte</h3>
-      <div id="worldList"></div>
+  <!-- 🌍 Weltkarte mit Zoom -->
+  <div id="worldOverlay" class="overlay hidden">
+    <div class="box large">
+      <h3>🗺 Weltkarte</h3>
+      <div id="worldMap">
+        <div id="worldInner"></div>
+      </div>
+      <div class="worldControls">
+        <button id="zoomOut">➖</button>
+        <button id="zoomIn">➕</button>
+      </div>
       <button id="closeWorld">Schließen</button>
     </div>
   </div>
 
-  <!-- 🧠 KI Manager -->
-  <div id="aiOverlay" class="hidden">
-    <div id="overlayBox">
-      <h3>🧠 KI-Manager</h3>
-      <label>
-        <input type="checkbox" id="aiToggle"> Automatisch bauen & upgraden
-      </label>
-      <button id="closeAI">Schließen</button>
+  <!-- 🤖 Manager -->
+  <div id="managerOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>🤖 Manager</h3>
+      <div id="managerList"></div>
+      <button id="closeManagers">Schließen</button>
+    </div>
+  </div>
+
+  <!-- 💎 Shop -->
+  <div id="shopOverlay" class="overlay hidden">
+    <div class="box">
+      <h3>💎 Shop</h3>
+      <button id="buyGemsSmall">+50 💎 (Demo)</button>
+      <button id="closeShop">Schließen</button>
     </div>
   </div>
 
   <nav>
-    <button id="worldBtn">🌍 Welt</button>
-    <button id="aiBtn">🧠 Manager</button>
+    <button id="worldBtn">🗺 Welt</button>
+    <button id="managerBtn">🤖 Manager</button>
+    <button id="shopBtn">💎 Shop</button>
     <button id="achBtn">🏆 Erfolge</button>
     <button id="prestigeBtn">🔁 Prestige</button>
     <button id="newGameBtn">🔄 Neues Spiel</button>
