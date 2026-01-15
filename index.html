@@ -8,125 +8,56 @@
 </head>
 <body>
 
-<div id="game">
+<header>
+  <div id="money">💰 0</div>
+  <div id="gems">💎 0</div>
+  <div id="prestige">🔁 x1</div>
+  <div id="islandName">🏝 Startinsel</div>
+</header>
 
-  <header>
-    <h1>🏭 Production Chain Tycoon</h1>
-    <div class="topStats">
-      <span id="money">💰 0</span>
-      <span id="gems">💎 0</span>
-      <span id="prestige">🔁 x1</span>
-    </div>
-  </header>
+<main>
+  <svg id="map" width="100%" height="400"></svg>
 
-  <div id="islandBar">
+  <div id="islandUI">
+    <div id="resourceUI"></div>
     <button id="prevIsland">⬅</button>
-    <span id="islandName">🏝 Insel 1</span>
     <button id="nextIsland">➡</button>
   </div>
+</main>
 
-  <div id="mapContainer">
-    <svg id="map"></svg>
-  </div>
+<footer>
+  <button id="questBtn">Quests</button>
+  <button id="skillBtn">Skill-Tree</button>
+  <button id="dailyBtn">Tägliche Belohnung</button>
+  <button id="prestigeBtn">Prestige</button>
+  <button id="newGameBtn">Neues Spiel</button>
+</footer>
 
-  <!-- BUILD / UPGRADE OVERLAYS -->
-  <div id="overlay" class="overlay hidden">
-    <div class="box">
-      <h3>Platzieren</h3>
-      <div id="buildOptions"></div>
-      <button id="closeOverlay">Abbrechen</button>
-    </div>
-  </div>
+<!-- Overlays -->
+<div id="overlay" class="hidden">
+  <div id="buildOptions"></div>
+  <button id="closeOverlay">Schließen</button>
+</div>
 
-  <div id="upgradeOverlay" class="overlay hidden">
-    <div class="box">
-      <h3>Upgrades</h3>
-      <div id="upgradeOptions"></div>
-      <button id="closeUpgrade">Schließen</button>
-    </div>
-  </div>
+<div id="questOverlay" class="hidden">
+  <div id="questList"></div>
+  <button id="closeQuest">Schließen</button>
+</div>
 
-  <!-- QUESTS -->
-  <div id="questOverlay" class="overlay hidden">
-    <div class="box large">
-      <h3>📝 Quests</h3>
-      <div id="questList"></div>
-      <button id="closeQuest">Schließen</button>
-    </div>
-  </div>
+<div id="skillOverlay" class="hidden">
+  <div id="skillTree"></div>
+  <button id="closeSkills">Schließen</button>
+</div>
 
-  <!-- SKILL TREE -->
-  <div id="skillOverlay" class="overlay hidden">
-    <div class="box large">
-      <h3>🧠 Skill Tree</h3>
-      <div id="skillTree"></div>
-      <button id="closeSkills">Schließen</button>
-    </div>
-  </div>
+<div id="dailyOverlay" class="hidden">
+  <div id="dailyText"></div>
+  <button id="claimDaily">Abholen</button>
+  <button id="closeDaily">Schließen</button>
+</div>
 
-  <!-- DAILY REWARD -->
-  <div id="dailyOverlay" class="overlay hidden">
-    <div class="box">
-      <h3>🎁 Tägliche Belohnung</h3>
-      <div id="dailyText"></div>
-      <button id="claimDaily">Claim</button>
-      <button id="closeDaily">Schließen</button>
-    </div>
-  </div>
-
-  <!-- TUTORIAL -->
-  <div id="tutorialOverlay" class="overlay hidden">
-    <div class="box">
-      <h3>📘 Tutorial</h3>
-      <div id="tutorialText"></div>
-      <button id="tutorialNext">Weiter</button>
-    </div>
-  </div>
-
-  <!-- WELTKARTE -->
-  <div id="worldOverlay" class="overlay hidden">
-    <div class="box large">
-      <h3>🗺 Weltkarte</h3>
-      <div id="worldMap">
-        <div id="worldInner"></div>
-      </div>
-      <div class="worldControls">
-        <button id="zoomOut">➖</button>
-        <button id="zoomIn">➕</button>
-      </div>
-      <button id="closeWorld">Schließen</button>
-    </div>
-  </div>
-
-  <!-- MANAGER -->
-  <div id="managerOverlay" class="overlay hidden">
-    <div class="box">
-      <h3>🤖 Manager</h3>
-      <div id="managerList"></div>
-      <button id="closeManagers">Schließen</button>
-    </div>
-  </div>
-
-  <!-- SHOP -->
-  <div id="shopOverlay" class="overlay hidden">
-    <div class="box">
-      <h3>💎 Shop</h3>
-      <button id="buyGemsSmall">+50 💎 (Demo)</button>
-      <button id="closeShop">Schließen</button>
-    </div>
-  </div>
-
-  <nav>
-    <button id="questBtn">📝 Quests</button>
-    <button id="skillBtn">🧠 Skill Tree</button>
-    <button id="dailyBtn">🎁 Tägliche Belohnungen</button>
-    <button id="managerBtn">🤖 Manager</button>
-    <button id="worldBtn">🗺 Welt</button>
-    <button id="shopBtn">💎 Shop</button>
-    <button id="prestigeBtn">🔁 Prestige</button>
-    <button id="newGameBtn">🔄 Neues Spiel</button>
-  </nav>
-
+<div id="tutorialOverlay" class="hidden">
+  <div id="tutorialText"></div>
+  <button id="tutorialNext">Weiter</button>
 </div>
 
 <script src="game.js"></script>
